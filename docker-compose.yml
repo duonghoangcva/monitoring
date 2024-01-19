@@ -1,0 +1,107 @@
+version: '3.2'
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+    depends_on:
+    - redis
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+    - 6379:6379
+    restart: unless-stopped
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+    ports:
+    - 9100:9100
+  nodeweb-app:
+    image: nodeweb-app:latest
+    container_name: nodeweb-app
+    ports:
+    - 8081:8080
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+    - 4000:3000
+    volumes:
+    - grafana_folder:/var/lib/grafana
+    - grafana_storage:/var/lib/grafana
+    - ./grafana/:/etc/grafana/provisioning/datasources/
+    - grafana_dashboard:/etc/grafana/provisioning/dashboards/
+    restart: always
+    environment:
+      GF_DATABASE_TYPE: mysql
+      GF_DATABASE_HOST: mysql-server
+      GF_DATABASE_NAME: grafana
+      GF_DATABASE_USER: ${USER_ID}
+      GF_DATABASE_PASSWORD: ${USER_PWD}
+    depends_on:
+    - mysql-server
+  alertmanager:
+    image: prom/alertmanager:v0.24.0
+    container_name: alertmanager
+    hostname: alertmanager
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    restart: always
+    command: '--config.file=/etc/alertmanager/config.yml --storage.path=/alertmanager --log.level=debug'
+
+  mysql-server:
+    image: mysql:latest
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PWD}
+      MYSQL_DATABASE: grafana
+      MYSQL_USER: ${USER_ID}
+      MYSQL_PASSWORD: ${USER_PWD}
+    volumes:
+      - mysql-storage:/var/lib/mysql
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:v2.43.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    links:
+      - cadvisor:cadvisor
+      - alertmanager:alertmanager
+volumes:
+    prometheus_data: {}
+    grafana_folder:
+      external: true
+    mysql-storage:
+      external: true
+    grafana_storage:
+      external: true
+    grafana_datasources:
+      external: true
+    grafana_dashboard:
+      external: true

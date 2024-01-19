@@ -1,0 +1,31 @@
+groups:
+- name: cpu_memory_alerts
+  rules:
+  - alert: HighCPUUsage
+    expr: sum(rate(process_cpu_seconds_total[1m])) by (instance) > 0.7
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: High CPU usage on {{ $labels.instance }}
+      description: The CPU usage on {{ $labels.instance }} has been over 70% for the last 5 minute.
+
+  - alert: HighMemoryUsage
+    expr: (node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes) / node_memory_MemTotal_bytes > 0.9
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: High memory usage on {{ $labels.instance }}
+      description: The memory usage on {{ $labels.instance }} has been over 90% for the last 2 minute.
+- name: node_exporter_alerts
+  rules:
+  - alert: NodeExporterDown
+    expr: up == 0
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: Node exporter down on {{ $labels.instance }}
+      description: The node exporter on {{ $labels.instance }} has been down for more than 2 minutes.
+
