@@ -32,6 +32,7 @@ services:
   nodeweb-app:
     image: nodeweb-app:latest
     container_name: nodeweb-app
+    build: ./nodejs
     ports:
     - 8081:8080
     restart: unless-stopped
