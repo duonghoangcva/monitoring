@@ -14,11 +14,11 @@ route:
 receivers:
 - name: 'gmail-notifications'
   email_configs:
-  - to: 'canigetyourinfo@gmail.com'
-    from: 'bob.pt2991@gmail.com'
+  - to: 'luuthanhtu2296@gmail.com'
+    from: 'tuluu2296'
     smarthost: smtp.gmail.com:587
-    auth_username: bob.pt2991@gmail.com
-    auth_identity: bob.pt2991@gmail.com
+    auth_username: tuluu2296@gmail.com
+    auth_identity: tuluu2296@gmail.com
     auth_password: secretstring
     send_resolved: true
     require_tls: true
