@@ -15,7 +15,7 @@ receivers:
 - name: 'gmail-notifications'
   email_configs:
   - to: 'luuthanhtu2296@gmail.com'
-    from: 'tuluu2296'
+    from: 'tuluu2296@gmail.com'
     smarthost: smtp.gmail.com:587
     auth_username: tuluu2296@gmail.com
     auth_identity: tuluu2296@gmail.com
