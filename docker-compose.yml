@@ -30,7 +30,7 @@ services:
     ports:
     - 9100:9100
   nodeweb-app:
-    image: nodeweb-app:latest
+    # image: nodeweb-app:latest
     container_name: nodeweb-app
     build: ./nodejs
     ports:
