@@ -4,5 +4,5 @@ datasources:
 - name: Prometheus-datasource-file
   type: prometheus
   access: proxy
-  url: http://admin:admin@2023@52.87.156.220:9090
+  url: http://admin:admin@2023@3.83.178.30:9090
   isDefault: true
