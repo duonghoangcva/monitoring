@@ -32,13 +32,13 @@ scrape_configs:
       password: admin@2023
     metrics_path: '/metrics'
     static_configs:
-      - targets: ["34.238.117.252:9090"]
+      - targets: ["52.87.156.220:9090"]
 
 
   - job_name: "container-cadvisor"
     scrape_interval: 30s
     static_configs:
-     - targets: ["34.238.117.252:8080"]
+     - targets: ["52.87.156.220:8080"]
        labels:
         my_label: 'container-group'
 #  - job_name: "container-redis"
@@ -56,12 +56,12 @@ scrape_configs:
   - job_name: "remote-linux-exporter"
     scrape_interval: 25s
     static_configs:
-     - targets: ["52.207.210.8:9100"]
+     - targets: ["3.93.241.186:9100"]
        labels:
         my_label: 'linux-exporter'
   - job_name: "remote-windows-exporter"
     scrape_interval: 15s
     static_configs:
-     - targets: ["34.227.158.22:9182"]
+     - targets: ["18.212.65.250:9182"]
        labels:
         my_label: 'windows-exporter'
