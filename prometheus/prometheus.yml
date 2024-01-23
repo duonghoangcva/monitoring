@@ -38,7 +38,7 @@ scrape_configs:
   - job_name: "container-cadvisor"
     scrape_interval: 30s
     static_configs:
-     - targets: ["52.87.156.220:8080"]
+     - targets: ["3.83.178.30:8080"]
        labels:
         my_label: 'container-group'
 #  - job_name: "container-redis"
